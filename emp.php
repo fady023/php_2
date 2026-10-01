@@ -19,12 +19,19 @@ class emp{
         return $employee;
     }
 
-    public function get_emp($id){
+    public function show_emp($id){
 
         $q = "select * from emp where id='$id'";
         $res = $this->con->query($q);
         $employee = $res->fetch_assoc();
         return $employee;
 
+    }
+    public function store($data){
+
+
+
+
+    
     }
 }
