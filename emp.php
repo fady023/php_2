@@ -51,6 +51,26 @@ class emp
     }
 
         }
+        public function update($data,$id){
+
+         $name = $data['name'];
+        $email = $data['email'];
+       
+        $check_email = $this->con->query("select * from emp where email='$email' AND id !='$id'");
+        $check_email_rows = $check_email->num_rows;
+
+        if($check_email_rows > 0){
+           return ["error"=>"this email already taken"];
+        }else{
+             $q = "update emp set name='$name' , email='$email' where id='$id'";
+        $res = $this->con->query($q);
+        if ($res) {
+          return ["success"=>"data updated","data"=>$res];
+        } else {
+          return ["error"=>$this->con->error];
+        }
+    }
+        }
 
        
 }
