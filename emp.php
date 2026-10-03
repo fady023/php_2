@@ -1,6 +1,7 @@
-<?php   
+<?php
 
-class emp{
+class emp
+{
     private $con;
 
     function __construct($con)
@@ -8,30 +9,48 @@ class emp{
         $this->con = $con;
     }
 
-    public function get_emps(){
-        $sql = "select * from emp";
-        $result = $this->con->query($sql);
-        $employee = array();
-        while($row = $result->fetch_assoc()){
-            $employee[] = $row ; 
+    public function get_emps()
+    {
+        $q = "select * from emp";
+        $result = $this->con->query($q);
+        $employees = array();
+        while ($row = $result->fetch_assoc()) {
+            $employees[] = $row;
         }
 
-        return $employee;
+        return $employees;
     }
 
-    public function show_emp($id){
+    public function show_emp($id)
+    {
 
         $q = "select * from emp where id='$id'";
         $res = $this->con->query($q);
         $employee = $res->fetch_assoc();
         return $employee;
-
     }
-    public function store($data){
+    public function store($data)
+    {
 
+        $name = $data['name'];
+        $email = $data['email'];
+       
+        $check_email = $this->con->query("select * from emp where email='$email'");
+        $check_email_rows = $check_email->num_rows;
 
-
-
-    
+        if($check_email_rows > 0){
+           return ["error"=>"this email already taken"];
+        }else{
+             $q = "insert into emp(name,email) values('$name','$email')";
+        $res = $this->con->query($q);
+        if ($res) {
+          return ["success"=>"Done","data"=>$res];
+        } else {
+          return ["error"=>$this->con->error];
+        }
     }
+
+        }
+
+       
 }
