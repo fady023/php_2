@@ -41,7 +41,7 @@ class emp
         if ($check_email_rows > 0) {
             return ["error" => "this email already taken"];
         } else {
-            $q = "insert into emp(name,email) values('$name','$email')";
+            $q = "insert into emp(name,email,depart_id) values('$name','$email',2)";
             $res = $this->con->query($q);
             if ($res) {
                 return ["success" => "Done", "data" => $res];

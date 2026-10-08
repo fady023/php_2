@@ -1,5 +1,9 @@
 <?php 
 require_once "./curl_helper.php";
+require_once "./conn.php";
+require_once "./emp.php";
+
+$emp = new emp($con);
 
 $base_url = "https://dummyjson.com/users";
 
@@ -9,7 +13,11 @@ $users = send_request($base_url);
 $data= json_decode($users,true);
 
 foreach($data['users'] as $user){
-    echo $user['firstName']."<br>";
+  $emp->store([
+    "name"=>$user["firstName"],
+    "email"=>$user["email"],
+    "depart_id"=>"3"
+  ]);
 } 
 
 /* echo "<pre>";
