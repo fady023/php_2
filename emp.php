@@ -11,7 +11,7 @@ class emp
 
     public function get_emps()
     {
-        $q = "select * from emp";
+        $q = "select name as employee_name,email as employee_email,dep_name as department_name from emp join departments on depart_id=dep_id" ;
         $result = $this->con->query($q);
         $employees = array();
         while ($row = $result->fetch_assoc()) {
@@ -24,7 +24,7 @@ class emp
     public function show_emp($id)
     {
 
-        $q = "select * from emp where id='$id'";
+        $q = "select name,email,dep_name from emp join departments on depart_id=dep_id where id='$id'";
         $res = $this->con->query($q);
         $employee = $res->fetch_assoc();
         return $employee;
@@ -34,43 +34,51 @@ class emp
 
         $name = $data['name'];
         $email = $data['email'];
-       
+
         $check_email = $this->con->query("select * from emp where email='$email'");
         $check_email_rows = $check_email->num_rows;
 
-        if($check_email_rows > 0){
-           return ["error"=>"this email already taken"];
-        }else{
-             $q = "insert into emp(name,email) values('$name','$email')";
-        $res = $this->con->query($q);
-        if ($res) {
-          return ["success"=>"Done","data"=>$res];
+        if ($check_email_rows > 0) {
+            return ["error" => "this email already taken"];
         } else {
-          return ["error"=>$this->con->error];
+            $q = "insert into emp(name,email) values('$name','$email')";
+            $res = $this->con->query($q);
+            if ($res) {
+                return ["success" => "Done", "data" => $res];
+            } else {
+                return ["error" => $this->con->error];
+            }
         }
     }
+    public function update($data, $id)
+    {
 
-        }
-        public function update($data,$id){
-
-         $name = $data['name'];
+        $name = $data['name'];
         $email = $data['email'];
-       
+
         $check_email = $this->con->query("select * from emp where email='$email' AND id !='$id'");
         $check_email_rows = $check_email->num_rows;
 
-        if($check_email_rows > 0){
-           return ["error"=>"this email already taken"];
-        }else{
-             $q = "update emp set name='$name' , email='$email' where id='$id'";
-        $res = $this->con->query($q);
-        if ($res) {
-          return ["success"=>"data updated","data"=>$res];
+        if ($check_email_rows > 0) {
+            return ["error" => "this email already taken"];
         } else {
-          return ["error"=>$this->con->error];
+            $q = "update emp set name='$name' , email='$email' where id='$id'";
+            $res = $this->con->query($q);
+            if ($res) {
+                return ["success" => "data updated", "data" => $res];
+            } else {
+                return ["error" => $this->con->error];
+            }
         }
     }
-        }
 
-       
+    public function destroy($id)
+    {
+        $res = $this->con->query("delete from emp where id='$id'");
+        if ($res) {
+            return ["success" => "deleted", "data" => $res];
+        } else {
+            return ["error" => $this->con->error];
+        }
+    }
 }
